@@ -69,7 +69,7 @@ basic.forever(function () {
     }
 })
 basic.forever(function () {
-    if (obP == 1) {
+    if (obP > 0) {
         if (JoyCar.obstacleavoidance(SensorLRSelection.Left) && JoyCar.obstacleavoidance(SensorLRSelection.Right)) {
             obZ = 1
         } else {
@@ -85,11 +85,16 @@ basic.forever(function () {
         } else {
             obL = 0
         }
+        if (JoyCar.sonar() > 20) {
+            Sonar = 0
+        } else if (JoyCar.sonar() < 20) {
+            Sonar = 1
+            JoyCar.stop(StopIntensity.Intense)
+        }
         if (stop == 0) {
             if (obL == 1 || (obR == 1 || obZ == 1)) {
                 JoyCar.stop(StopIntensity.Intense)
                 stop += 1
-                basic.pause(100)
             }
         }
         if (obR == 1) {
@@ -117,41 +122,34 @@ basic.forever(function () {
         } else if (obZ == 1) {
             JoyCar.drive(FRDirection.Reverse, 20)
             JoyCar.reversinglight(ToggleSwitch.On)
-        } else if (mode == 1 && Sonar == 1) {
+        } else if (mode == 1) {
             JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
             JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
-        } else if (mode == 2 && Sonar == 1) {
-            JoyCar.drive(FRDirection.Forward, 50)
+        } else if (mode == 2) {
             JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
             JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
             stop = 0
         }
-    }
-})
-basic.forever(function () {
-    if (mode > 0) {
-        if (true) {
-            Sonar = 1
-        } else if (JoyCar.sonar() > 20) {
-            Sonar = 0
-            JoyCar.stop(StopIntensity.Intense)
-        }
-        if (Sonar == 1) {
-            basic.showIcon(IconNames.No)
-            JoyCar.brakelight(ToggleSwitch.On)
-            JoyCar.stop(StopIntensity.Soft)
-            JoyCar.brakelight(ToggleSwitch.Off)
-            JoyCar.drive(FRDirection.Reverse, 40)
-            JoyCar.reversinglight(ToggleSwitch.On)
-        } else {
-            Sonar = 0
-            if (mode == 1) {
-                JoyCar.reversinglight(ToggleSwitch.Off)
-                basic.showString("D")
-            }
-            if (mode == 2) {
-                JoyCar.reversinglight(ToggleSwitch.Off)
-                basic.showNumber(1)
+        if (mode > 0) {
+            if (Sonar == 1) {
+                basic.showIcon(IconNames.No)
+                JoyCar.brakelight(ToggleSwitch.On)
+                JoyCar.stop(StopIntensity.Soft)
+                JoyCar.brakelight(ToggleSwitch.Off)
+                JoyCar.drive(FRDirection.Reverse, 40)
+                JoyCar.reversinglight(ToggleSwitch.On)
+                if (JoyCar.sonar() > 20) {
+                    Sonar = 0
+                    JoyCar.stop(StopIntensity.Intense)
+                    if (mode == 1) {
+                        JoyCar.reversinglight(ToggleSwitch.Off)
+                        basic.showString("D")
+                    }
+                    if (mode == 2) {
+                        JoyCar.reversinglight(ToggleSwitch.Off)
+                        basic.showNumber(1)
+                    }
+                }
             }
         }
     }
@@ -172,4 +170,7 @@ basic.forever(function () {
             JoyCar.stop(StopIntensity.Intense)
         }
     }
+})
+loops.everyInterval(100, function () {
+	
 })
