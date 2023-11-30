@@ -1,52 +1,3 @@
-function LineTrk () {
-    if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && !(JoyCar.linefinder(SensorLCRSelection.Right)))) {
-        JoyCar.turn(
-        FRDirection.Forward,
-        LRDirection.Left,
-        50,
-        0
-        )
-    } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && JoyCar.linefinder(SensorLCRSelection.Right))) {
-        JoyCar.turn(
-        FRDirection.Forward,
-        LRDirection.Right,
-        50,
-        0
-        )
-    } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (JoyCar.linefinder(SensorLCRSelection.Center) && !(JoyCar.linefinder(SensorLCRSelection.Right)))) {
-        JoyCar.stop(StopIntensity.Intense)
-        JoyCar.brakelight(ToggleSwitch.On)
-    } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (JoyCar.linefinder(SensorLCRSelection.Center) && JoyCar.linefinder(SensorLCRSelection.Right))) {
-        JoyCar.turn(
-        FRDirection.Forward,
-        LRDirection.Right,
-        50,
-        2
-        )
-    } else if (JoyCar.linefinder(SensorLCRSelection.Left) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && !(JoyCar.linefinder(SensorLCRSelection.Right)))) {
-        JoyCar.turn(
-        FRDirection.Forward,
-        LRDirection.Left,
-        50,
-        0
-        )
-    } else if (JoyCar.linefinder(SensorLCRSelection.Left) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && JoyCar.linefinder(SensorLCRSelection.Right))) {
-        JoyCar.drive(FRDirection.Forward, 50)
-    } else if (JoyCar.linefinder(SensorLCRSelection.Left) && (JoyCar.linefinder(SensorLCRSelection.Center) && !(JoyCar.linefinder(SensorLCRSelection.Right)))) {
-        JoyCar.turn(
-        FRDirection.Forward,
-        LRDirection.Left,
-        50,
-        2
-        )
-    } else if (JoyCar.linefinder(SensorLCRSelection.Left) && (JoyCar.linefinder(SensorLCRSelection.Center) && JoyCar.linefinder(SensorLCRSelection.Right))) {
-        JoyCar.drive(FRDirection.Forward, 50)
-    } else {
-        JoyCar.stop(StopIntensity.Intense)
-        JoyCar.brakelight(ToggleSwitch.On)
-        JoyCar.hazardlights(ToggleSwitch.On)
-    }
-}
 let obZ = 0
 basic.showString("BOOT")
 let mode = 0
@@ -179,7 +130,7 @@ basic.forever(function () {
 })
 basic.forever(function () {
     if (mode > 0) {
-        if (JoyCar.sonar() < 10) {
+        if (true) {
             Sonar = 1
         } else if (JoyCar.sonar() > 20) {
             Sonar = 0
@@ -214,7 +165,6 @@ basic.forever(function () {
         }
         if (mode == 2) {
             basic.showNumber(1)
-            LineTrk()
             JoyCar.light(ToggleSwitch.On)
             JoyCar.brakelight(ToggleSwitch.Off)
         }
