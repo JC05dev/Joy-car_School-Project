@@ -52,20 +52,13 @@ basic.forever(function () {
     }
 })
 basic.forever(function () {
-    if (input.buttonIsPressed(Button.B)) {
-        mode = 0
-        distance = 0
-        Sonar = 0
-        obP = 0
-        obL = 0
-        obR = 0
-        stop = 0
-        basic.showNumber(0)
-        JoyCar.brakelight(ToggleSwitch.On)
+    if (sonar.ping(
+    DigitalPin.P8,
+    DigitalPin.P12,
+    PingUnit.Centimeters
+    ) < 20) {
         JoyCar.stop(StopIntensity.Intense)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
-        JoyCar.stop(StopIntensity.Intense)
+        basic.showString("X")
     }
 })
 basic.forever(function () {
@@ -85,73 +78,23 @@ basic.forever(function () {
         } else {
             obL = 0
         }
-        if (JoyCar.sonar() > 20) {
-            Sonar = 0
-        } else if (JoyCar.sonar() < 20) {
-            Sonar = 1
-            JoyCar.stop(StopIntensity.Intense)
-        }
-        if (stop == 0) {
-            if (obL == 1 || (obR == 1 || obZ == 1)) {
-                JoyCar.stop(StopIntensity.Intense)
-                stop += 1
-            }
-        }
-        if (obR == 1) {
-            JoyCar.stop(StopIntensity.Intense)
-            JoyCar.drivePwm(
-            0,
-            255,
-            255,
-            0
-            )
-            JoyCar.indicator(ToggleSwitch.On, SensorLRSelection.Left)
-            JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-            JoyCar.brakelight(ToggleSwitch.On)
-        } else if (obL == 1) {
-            JoyCar.stop(StopIntensity.Intense)
-            JoyCar.drivePwm(
-            255,
-            0,
-            0,
-            255
-            )
-            JoyCar.indicator(ToggleSwitch.On, SensorLRSelection.Right)
-            JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
-            JoyCar.brakelight(ToggleSwitch.On)
-        } else if (obZ == 1) {
-            JoyCar.drive(FRDirection.Reverse, 20)
-            JoyCar.reversinglight(ToggleSwitch.On)
-        } else if (mode == 1) {
-            JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-            JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
-        } else if (mode == 2) {
-            JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-            JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
-            stop = 0
-        }
-        if (mode > 0) {
-            if (Sonar == 1) {
-                basic.showIcon(IconNames.No)
-                JoyCar.brakelight(ToggleSwitch.On)
-                JoyCar.stop(StopIntensity.Soft)
-                JoyCar.brakelight(ToggleSwitch.Off)
-                JoyCar.drive(FRDirection.Reverse, 40)
-                JoyCar.reversinglight(ToggleSwitch.On)
-                if (JoyCar.sonar() > 20) {
-                    Sonar = 0
-                    JoyCar.stop(StopIntensity.Intense)
-                    if (mode == 1) {
-                        JoyCar.reversinglight(ToggleSwitch.Off)
-                        basic.showString("D")
-                    }
-                    if (mode == 2) {
-                        JoyCar.reversinglight(ToggleSwitch.Off)
-                        basic.showNumber(1)
-                    }
-                }
-            }
-        }
+    }
+})
+basic.forever(function () {
+    if (input.buttonIsPressed(Button.B)) {
+        mode = 0
+        distance = 0
+        Sonar = 0
+        obP = 0
+        obL = 0
+        obR = 0
+        stop = 0
+        basic.showNumber(0)
+        JoyCar.brakelight(ToggleSwitch.On)
+        JoyCar.stop(StopIntensity.Intense)
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
+        JoyCar.stop(StopIntensity.Intense)
     }
 })
 basic.forever(function () {
@@ -171,6 +114,35 @@ basic.forever(function () {
         }
     }
 })
-loops.everyInterval(100, function () {
-	
+basic.forever(function () {
+    if (obR == 1) {
+        JoyCar.stop(StopIntensity.Intense)
+        JoyCar.drivePwm(
+        0,
+        255,
+        255,
+        0
+        )
+        JoyCar.indicator(ToggleSwitch.On, SensorLRSelection.Left)
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
+        JoyCar.brakelight(ToggleSwitch.On)
+    } else if (obL == 1) {
+        JoyCar.stop(StopIntensity.Intense)
+        JoyCar.drivePwm(
+        255,
+        0,
+        0,
+        255
+        )
+        JoyCar.indicator(ToggleSwitch.On, SensorLRSelection.Right)
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
+        JoyCar.brakelight(ToggleSwitch.On)
+    } else if (mode == 1 && (obL == 0 || obR == 0)) {
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
+        JoyCar.stop(StopIntensity.Intense)
+    } else if (mode == 2 && (obL == 0 || obR == 0)) {
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
+        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
+    }
 })
