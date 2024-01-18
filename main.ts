@@ -1,38 +1,13 @@
-let obZ = 0
+serial.redirectToUSB()
 basic.showString("BOOT")
 let mode = 0
-let distance = 0
-let Sonar = 0
 let obP = 0
 let obL = 0
 let obR = 0
-let stop = 0
 basic.showNumber(0)
-JoyCar.light(ToggleSwitch.On)
 basic.forever(function () {
     if (mode == 0) {
-        if (JoyCar.speed(SensorLRSelection.Right)) {
-            JoyCar.drivePwm(
-            0,
-            25,
-            0,
-            0
-            )
-            basic.showString("R")
-        } else {
-            JoyCar.drivePwm(
-            0,
-            0,
-            0,
-            0
-            )
-            basic.showString("0")
-        }
-    }
-})
-basic.forever(function () {
-    if (mode == 0) {
-        if (JoyCar.speed(SensorLRSelection.Left)) {
+        if (!(JoyCar.speed(SensorLRSelection.Left))) {
             JoyCar.drivePwm(
             0,
             0,
@@ -52,22 +27,31 @@ basic.forever(function () {
     }
 })
 basic.forever(function () {
-    if (sonar.ping(
-    DigitalPin.P8,
-    DigitalPin.P12,
-    PingUnit.Centimeters
-    ) < 20) {
-        JoyCar.stop(StopIntensity.Intense)
-        basic.showString("X")
+    if (mode == 0) {
+        if (!(JoyCar.speed(SensorLRSelection.Right))) {
+            JoyCar.drivePwm(
+            0,
+            25,
+            0,
+            0
+            )
+            basic.showString("R")
+        } else {
+            JoyCar.drivePwm(
+            0,
+            0,
+            0,
+            0
+            )
+            basic.showString("0")
+        }
     }
 })
 basic.forever(function () {
+    serial.writeLine("" + (JoyCar.readAdc()))
+})
+basic.forever(function () {
     if (obP > 0) {
-        if (JoyCar.obstacleavoidance(SensorLRSelection.Left) && JoyCar.obstacleavoidance(SensorLRSelection.Right)) {
-            obZ = 1
-        } else {
-            obZ = 0
-        }
         if (JoyCar.obstacleavoidance(SensorLRSelection.Right) == true) {
             obR = 1
         } else {
@@ -83,18 +67,10 @@ basic.forever(function () {
 basic.forever(function () {
     if (input.buttonIsPressed(Button.B)) {
         mode = 0
-        distance = 0
-        Sonar = 0
         obP = 0
         obL = 0
         obR = 0
-        stop = 0
         basic.showNumber(0)
-        JoyCar.brakelight(ToggleSwitch.On)
-        JoyCar.stop(StopIntensity.Intense)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
-        JoyCar.stop(StopIntensity.Intense)
     }
 })
 basic.forever(function () {
@@ -106,10 +82,9 @@ basic.forever(function () {
         }
         if (mode == 2) {
             basic.showNumber(1)
-            JoyCar.light(ToggleSwitch.On)
-            JoyCar.brakelight(ToggleSwitch.Off)
+            JoyCar.drive(FRDirection.Forward, 60)
         }
-        if (mode > 0) {
+        if (mode == 0) {
             JoyCar.stop(StopIntensity.Intense)
         }
     }
@@ -119,30 +94,45 @@ basic.forever(function () {
         JoyCar.stop(StopIntensity.Intense)
         JoyCar.drivePwm(
         0,
-        255,
-        255,
+        155,
+        155,
         0
         )
-        JoyCar.indicator(ToggleSwitch.On, SensorLRSelection.Left)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-        JoyCar.brakelight(ToggleSwitch.On)
     } else if (obL == 1) {
         JoyCar.stop(StopIntensity.Intense)
         JoyCar.drivePwm(
-        255,
+        155,
         0,
         0,
-        255
+        155
         )
-        JoyCar.indicator(ToggleSwitch.On, SensorLRSelection.Right)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
-        JoyCar.brakelight(ToggleSwitch.On)
-    } else if (mode == 1 && (obL == 0 || obR == 0)) {
+    } else if (mode == 1 && (obL == 0 && obR == 0)) {
         JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
         JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
         JoyCar.stop(StopIntensity.Intense)
-    } else if (mode == 2 && (obL == 0 || obR == 0)) {
+    } else if (mode == 2 && (obL == 0 && obR == 0)) {
         JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
         JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
+    }
+})
+basic.forever(function () {
+    if (mode == 2) {
+        if (JoyCar.linefinder(SensorLCRSelection.Left) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && !(JoyCar.linefinder(SensorLCRSelection.Right)))) {
+            JoyCar.drivePwm(
+            0,
+            100,
+            100,
+            0
+            )
+        } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && JoyCar.linefinder(SensorLCRSelection.Right))) {
+            JoyCar.drivePwm(
+            100,
+            0,
+            0,
+            100
+            )
+        } else {
+        	
+        }
     }
 })
