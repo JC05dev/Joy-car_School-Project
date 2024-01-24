@@ -124,7 +124,7 @@ basic.forever(function () {
             0,
             155
             )
-        } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && JoyCar.linefinder(SensorLCRSelection.Right))) {
+        } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && (JoyCar.linefinder(SensorLCRSelection.Right) && onTrack == 1))) {
             onTrack = 0
             JoyCar.stop(StopIntensity.Intense)
             JoyCar.drivePwm(
@@ -132,6 +132,24 @@ basic.forever(function () {
             155,
             155,
             0
+            )
+        } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (JoyCar.linefinder(SensorLCRSelection.Center) && (JoyCar.linefinder(SensorLCRSelection.Right) && onTrack == 1))) {
+            onTrack = 0
+            JoyCar.stop(StopIntensity.Intense)
+            JoyCar.drivePwm(
+            0,
+            255,
+            255,
+            0
+            )
+        } else if (JoyCar.linefinder(SensorLCRSelection.Left) && (JoyCar.linefinder(SensorLCRSelection.Center) && (!(JoyCar.linefinder(SensorLCRSelection.Right)) && onTrack == 1))) {
+            onTrack = 0
+            JoyCar.stop(StopIntensity.Intense)
+            JoyCar.drivePwm(
+            255,
+            0,
+            0,
+            255
             )
         } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && (!(JoyCar.linefinder(SensorLCRSelection.Right)) && onTrack == 0))) {
             onTrack = 1
