@@ -1,3 +1,4 @@
+let onTrack = 0
 serial.redirectToUSB()
 basic.showString("BOOT")
 let mode = 0
@@ -106,33 +107,35 @@ basic.forever(function () {
         0,
         155
         )
-    } else if (mode == 1 && (obL == 0 && obR == 0)) {
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
+    } else if (mode == 1 && (obL == 0 && (obR == 0 && onTrack == 1))) {
         JoyCar.stop(StopIntensity.Intense)
-    } else if (mode == 2 && (obL == 0 && obR == 0)) {
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Right)
-        JoyCar.indicator(ToggleSwitch.Off, SensorLRSelection.Left)
+    } else if (mode == 2 && (obL == 0 && (obR == 0 && onTrack == 1))) {
+        JoyCar.drive(FRDirection.Forward, 60)
     }
 })
 basic.forever(function () {
-    if (mode == 2) {
-        if (JoyCar.linefinder(SensorLCRSelection.Left) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && !(JoyCar.linefinder(SensorLCRSelection.Right)))) {
+    if (mode > 0) {
+        if (JoyCar.linefinder(SensorLCRSelection.Left) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && (!(JoyCar.linefinder(SensorLCRSelection.Right)) && onTrack == 1))) {
+            onTrack = 0
+            JoyCar.stop(StopIntensity.Intense)
             JoyCar.drivePwm(
+            155,
             0,
-            100,
-            100,
-            0
+            0,
+            155
             )
         } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && JoyCar.linefinder(SensorLCRSelection.Right))) {
+            onTrack = 0
+            JoyCar.stop(StopIntensity.Intense)
             JoyCar.drivePwm(
-            100,
             0,
-            0,
-            100
+            155,
+            155,
+            0
             )
-        } else {
-        	
+        } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && (!(JoyCar.linefinder(SensorLCRSelection.Right)) && onTrack == 0))) {
+            onTrack = 1
+            JoyCar.drive(FRDirection.Forward, 60)
         }
     }
 })
