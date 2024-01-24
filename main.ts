@@ -83,7 +83,7 @@ basic.forever(function () {
         }
         if (mode == 2) {
             basic.showNumber(1)
-            JoyCar.drive(FRDirection.Forward, 60)
+            JoyCar.drive(FRDirection.Forward, 100)
         }
         if (mode == 0) {
             JoyCar.stop(StopIntensity.Intense)
@@ -110,7 +110,7 @@ basic.forever(function () {
     } else if (mode == 1 && (obL == 0 && (obR == 0 && onTrack == 1))) {
         JoyCar.stop(StopIntensity.Intense)
     } else if (mode == 2 && (obL == 0 && (obR == 0 && onTrack == 1))) {
-        JoyCar.drive(FRDirection.Forward, 60)
+        JoyCar.drive(FRDirection.Forward, 100)
     }
 })
 basic.forever(function () {
@@ -153,7 +153,7 @@ basic.forever(function () {
             )
         } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && (!(JoyCar.linefinder(SensorLCRSelection.Right)) && onTrack == 0))) {
             onTrack = 1
-            JoyCar.drive(FRDirection.Forward, 60)
+            JoyCar.drive(FRDirection.Forward, 100)
         }
     }
 })
