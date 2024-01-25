@@ -151,6 +151,9 @@ basic.forever(function () {
             0,
             255
             )
+        } else if (JoyCar.linefinder(SensorLCRSelection.Left) && (JoyCar.linefinder(SensorLCRSelection.Center) && (JoyCar.linefinder(SensorLCRSelection.Right) && onTrack == 1))) {
+            onTrack = 0
+            JoyCar.stop(StopIntensity.Intense)
         } else if (!(JoyCar.linefinder(SensorLCRSelection.Left)) && (!(JoyCar.linefinder(SensorLCRSelection.Center)) && (!(JoyCar.linefinder(SensorLCRSelection.Right)) && onTrack == 0))) {
             onTrack = 1
             JoyCar.drive(FRDirection.Forward, 60)
